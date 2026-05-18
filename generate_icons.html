@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Extension Icons</title></head>
+<body>
+<h2>Click each button to download the icon</h2>
+<div id="previews"></div>
+<script>
+function drawIcon(size) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const r = size * 0.15;
+
+  // Rounded rect background
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(size - r, 0);
+  ctx.quadraticCurveTo(size, 0, size, r);
+  ctx.lineTo(size, size - r);
+  ctx.quadraticCurveTo(size, size, size - r, size);
+  ctx.lineTo(r, size);
+  ctx.quadraticCurveTo(0, size, 0, size - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, "#003087");
+  grad.addColorStop(1, "#0070BA");
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Credit card shape
+  const cx = size * 0.5, cy = size * 0.46;
+  const cw = size * 0.58, ch = size * 0.38;
+  const cr = size * 0.04;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-0.12);
+  ctx.beginPath();
+  ctx.moveTo(-cw/2 + cr, -ch/2);
+  ctx.lineTo(cw/2 - cr, -ch/2);
+  ctx.quadraticCurveTo(cw/2, -ch/2, cw/2, -ch/2 + cr);
+  ctx.lineTo(cw/2, ch/2 - cr);
+  ctx.quadraticCurveTo(cw/2, ch/2, cw/2 - cr, ch/2);
+  ctx.lineTo(-cw/2 + cr, ch/2);
+  ctx.quadraticCurveTo(-cw/2, ch/2, -cw/2, ch/2 - cr);
+  ctx.lineTo(-cw/2, -ch/2 + cr);
+  ctx.quadraticCurveTo(-cw/2, -ch/2, -cw/2 + cr, -ch/2);
+  ctx.closePath();
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.fill();
+
+  // Card stripe
+  ctx.fillStyle = "#B5A06B";
+  ctx.fillRect(-cw/2 + size*0.03, -ch/2 + ch*0.22, cw - size*0.06, ch*0.18);
+
+  // Card dots (card number hint)
+  const dotY = ch*0.12;
+  const dotR = size * 0.018;
+  ctx.fillStyle = "#003087";
+  for (let g = 0; g < 4; g++) {
+    for (let d = 0; d < 4; d++) {
+      const dx = -cw/2 + size*0.06 + g * size*0.12 + d * size*0.03;
+      ctx.beginPath();
+      ctx.arc(dx, dotY, dotR, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
+  // Lightning bolt
+  const lx = size * 0.62, ly = size * 0.55;
+  const ls = size * 0.22;
+  ctx.save();
+  ctx.translate(lx, ly);
+  ctx.beginPath();
+  ctx.moveTo(0, -ls);
+  ctx.lineTo(-ls*0.35, ls*0.05);
+  ctx.lineTo(ls*0.05, ls*0.05);
+  ctx.lineTo(-ls*0.1, ls);
+  ctx.lineTo(ls*0.35, -ls*0.05);
+  ctx.lineTo(-ls*0.05, -ls*0.05);
+  ctx.closePath();
+  ctx.fillStyle = "#FFD700";
+  ctx.fill();
+  ctx.strokeStyle = "#B5A06B";
+  ctx.lineWidth = size * 0.015;
+  ctx.stroke();
+  ctx.restore();
+
+  return canvas;
+}
+
+[16, 48, 128].forEach(size => {
+  const canvas = drawIcon(size);
+  const container = document.createElement("div");
+  container.style.margin = "16px";
+  container.style.display = "inline-block";
+  container.style.textAlign = "center";
+
+  const preview = document.createElement("canvas");
+  preview.width = 128; preview.height = 128;
+  const pctx = preview.getContext("2d");
+  pctx.imageSmoothingEnabled = true;
+  pctx.drawImage(canvas, 0, 0, 128, 128);
+  container.appendChild(preview);
+
+  const br = document.createElement("br");
+  container.appendChild(br);
+
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = `icon${size}.png`;
+  link.textContent = `Download icon${size}.png`;
+  link.style.display = "block";
+  link.style.marginTop = "8px";
+  container.appendChild(link);
+
+  document.getElementById("previews").appendChild(container);
+});
+</script>
+</body>
+</html>

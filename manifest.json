@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "PayPal Signup Autofill",
+  "version": "1.0.0",
+  "description": "Autofill PayPal checkout signup form with saved profile data.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.paypal.com/checkoutweb/signup*",
+    "https://api.zippopotam.us/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "PayPal Autofill",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.paypal.com/checkoutweb/signup*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyvZ+ARHJatwZLxZ52knlE+ac1hFMoqHogs45oibsiMnrNKHER0M4jrgK1RqgjoZnJHD2mpOJsHEoi0iETEuK8acaJXAnp0d88E1DZNfGOR8FJrnQNE9y9CigiCZSzbk+J0+Dizt0hBoZgGfwoCRE7qRCoIbqHXXn1PTJ4LXAOAm6lLdWKmJt1W99FK5pSV2UxszuY15p9qEU0MXrxGskS/w4KLGI1LBZGRHhSUDuh0e/waombv8IpxkJnyCZqbG3trNkMpaQnShiK99Bdf7DMpNo0eQJB2PeC0JvYjcN/ti4P6zLJh88vQf/GNWNKQ6XNyz7YSlejt806ftcl3ET7wIDAQAB"
+}
