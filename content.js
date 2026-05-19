@@ -5,6 +5,7 @@ const MAX_ATTEMPTS = 14;
 const RETRY_DELAY_MS = 500;
 const WIDGET_ID = "paypal-autofill-widget";
 const WIDGET_STYLE_ID = "paypal-autofill-style";
+const PAGE_OVERRIDE_STYLE_ID = "paypal-autofill-page-overrides";
 const RECORD_SEPARATOR = " ---- ";
 
 const US_STATE_ABBREVIATIONS = new Set([
@@ -224,6 +225,17 @@ function getFieldPlan(profile, stateAbbr) {
       { selector: "#password", value: profile.password }
     ]
   };
+}
+
+function injectPageOverrideStyles() {
+  if (document.getElementById(PAGE_OVERRIDE_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.id = PAGE_OVERRIDE_STYLE_ID;
+  style.textContent = "#captcha-standalone,.captcha-overlay,.captcha-container,.AddressAutocomplete-results{display:none!important;height:0!important;overflow:hidden!important}";
+  (document.head || document.documentElement).appendChild(style);
 }
 
 async function fillProfile(profile) {
@@ -663,5 +675,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
+injectPageOverrideStyles();
 initWidget();
 fillFromDefaults();
